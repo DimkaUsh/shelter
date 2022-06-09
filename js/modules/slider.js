@@ -1,11 +1,12 @@
-import cards from "./cards.js";
+import cards from './cards.js';
+import disableElements from './disableElement.js';
 
 function slider() {
-  const container = document.querySelector(".container");
-  const slider = document.querySelector(".slider");
-  const circleButton = document.querySelectorAll(".circle__button");
+  const container = document.querySelector('.container');
+  const slider = document.querySelector('.slider');
+  const circleButton = document.querySelectorAll('.circle__button');
 
-  let carousel = document.querySelector(".carousel");
+  let carousel = document.querySelector('.carousel');
   let containerSize = +getComputedStyle(container).width.slice(0, -2);
   const countCards = countOfcards();
 
@@ -47,22 +48,25 @@ function slider() {
 
   function createCards(selector) {
     let classCards = `${selector}`;
-    if (selector === "start") {
+    if (selector === 'start') {
       classCards = `cards old`;
     } else {
       classCards = `cards new ${selector}`;
     }
-    const element = document.createElement("div");
+    const element = document.createElement('div');
 
     element.className = classCards;
     for (let i = 0; i < countCards; i++) {
       element.innerHTML += `
       <div class="card" data-card="main"></div>`;
     }
+    let width = null;
+    selector === 'new-right' ? (width = widthNewSlider()) : (width = '-' + widthNewSlider());
+    element.style.left = width;
 
     carousel.append(element);
 
-    cards(element.querySelectorAll(".card"), listPets);
+    cards(element.querySelectorAll('.card'), listPets);
 
     listPets = [];
   }
@@ -82,48 +86,72 @@ function slider() {
     return countCards;
   }
 
+  function widthNewSlider() {
+    let width = null;
+    if (containerSize > 1279) {
+      width = '1080px';
+    }
+    if (containerSize > 767 && containerSize < 1279) {
+      width = '610px';
+    }
+
+    if (containerSize < 767) {
+      width = '300px';
+    }
+    return width;
+  }
+
   function transitionCards(right) {
     if (right) {
-      carousel.classList.add("transition-right");
+      carousel.classList.add('transition-right');
+      carousel.style.animationName = windowWidth('right');
     } else {
-      carousel.classList.add("transition-left");
+      carousel.classList.add('transition-left');
+      carousel.style.animationName = windowWidth('left');
     }
+  }
+
+  function windowWidth(were) {
+    let name = null;
+    if (containerSize >= 1279) {
+      name = `move-${were}-1080`;
+    }
+    if (containerSize > 767 && containerSize < 1279) {
+      name = `move-${were}-610`;
+    }
+
+    if (containerSize <= 767) {
+      name = `move-${were}-300`;
+    }
+    return name;
   }
 
   function deleteCards(newCards, oldCards) {
     oldCards.remove();
-    newCards.className = "cards old";
-    carousel.classList.remove("transition-left");
-    carousel.classList.remove("transition-right");
+    newCards.className = 'cards old';
+    carousel.classList.remove('transition-left');
+    carousel.classList.remove('transition-right');
+    carousel.style.animationName = null;
   }
 
   function onClick(e) {
-    const valueData = e.target.getAttribute("data-direction"),
-      oldCards = document.querySelector(".old");
+    circleButton.forEach((button) => disableElements(button, 2000));
+    const valueData = e.target.getAttribute('data-direction'),
+      oldCards = document.querySelector('.old');
 
     rundomNumber();
-    createCards(valueData === "right" ? "new-right" : "new-left");
-    const newCards = document.querySelector(".new");
+    console.log(e.target);
+    createCards(valueData === 'right' ? 'new-right' : 'new-left');
+    const newCards = document.querySelector('.new');
 
-    transitionCards(valueData === "right" ? true : false);
+    transitionCards(valueData === 'right' ? true : false);
     setTimeout(deleteCards, 1980, newCards, oldCards);
-    // switch (countOfcards()) {
-    //   // case 1:
-    //   //   setTimeout(deleteCards, 500, newCards, oldCards);
-    //   //   break;
-    //   // case 2:
-    //   //   setTimeout(deleteCards, 1500, newCards, oldCards);
-    //   //   break;
-    //   case 3:
-    //     setTimeout(deleteCards, 1980, newCards, oldCards);
-    //     break;
-    // }
     numberVisiblePet = numberVisiblePet.slice(3);
   }
 
   //Listner
   circleButton.forEach((button) => {
-    button.addEventListener("click", (e) => onClick(e));
+    button.addEventListener('click', (e) => onClick(e));
   });
 }
 

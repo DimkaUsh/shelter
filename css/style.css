@@ -260,7 +260,7 @@ section {
   overflow: hidden;
 }
 
-@keyframes move-right {
+@keyframes move-right-1080 {
   from {
     right: 0px;
   }
@@ -268,7 +268,7 @@ section {
     right: 1080px;
   }
 }
-@keyframes move-left {
+@keyframes move-left-1080 {
   from {
     right: 0px;
   }
@@ -276,13 +276,45 @@ section {
     right: -1080px;
   }
 }
+@keyframes move-right-610 {
+  from {
+    right: 0px;
+  }
+  to {
+    right: 610px;
+  }
+}
+@keyframes move-left-610 {
+  from {
+    right: 0px;
+  }
+  to {
+    right: -610px;
+  }
+}
+@keyframes move-right-300 {
+  from {
+    right: 0px;
+  }
+  to {
+    right: 300px;
+  }
+}
+@keyframes move-left-300 {
+  from {
+    right: 0px;
+  }
+  to {
+    right: -300px;
+  }
+}
 .transition-left {
-  animation-name: move-left;
+  animation-name: move-left-610;
   animation-duration: 2s;
 }
 
 .transition-right {
-  animation-name: move-right;
+  animation-name: move-right-610;
   animation-duration: 2s;
 }
 
